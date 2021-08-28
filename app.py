@@ -2,10 +2,13 @@ import os
 from dotenv import dotenv_values
 from flask import Flask, jsonify, request
 
+from models.model import ModelSummarizer
+
 is_production = os.environ.get('FLASK_ENV') == 'production'
 authentication_token = os.environ.get('AUTHORIZATION_KEY')
 config = dotenv_values(".env")
 
+model = ModelSummarizer()
 app = Flask(__name__)
 
 
@@ -23,6 +26,9 @@ def predict():
                 return jsonify({"error": "Unauthorized request"}), 403
         data = request.json['data']
         if data is not None:
-            # TODO: Replace this with actual model.predict() and return a proper response
-            return jsonify({"result": data})
+            try:
+                result = model.predict(data)
+                return jsonify({"result": result})
+            except:
+                return jsonify({"error": "Data format wrong"}), 400
     return jsonify({"error": "Data is invalid or not exist"}), 400
