@@ -30,7 +30,7 @@ def predict():
                 result = model.predict(data)
                 return jsonify({"result": result})
             except Exception as e:
-                print(data)
-                print(e)
+                print(data, flush=True)
+                print(e, flush=True)
                 return jsonify({"error": "Data format wrong"}), 400
     return jsonify({"error": "Data is invalid or not exist"}), 400
